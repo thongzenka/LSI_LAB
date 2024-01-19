@@ -1,0 +1,52 @@
+/*
+module tb;
+  wire clk1;
+  wire clk2;
+  
+  clock_gen u0(clk1);
+  clock_gen #(.PHASE(270)) u1(clk2);
+  
+  initial begin
+    #200 u1._disable();
+    #95 u1._enable();
+    #300 $finish;
+  end
+  
+  initial begin
+    $dumpvars;
+    $dumpfile("dump.vcd");
+  end
+endmodule
+*/
+
+module tb;
+  wire clk1;
+  wire clk2;
+  wire clk3;
+  wire clk4;
+  reg  enable;
+  reg [7:0] dly;
+  
+  clock_gen u0(enable, clk1);
+  clock_gen #(.PHASE(90)) u1(enable, clk2);
+  clock_gen #(.PHASE(180)) u2(enable, clk3);
+  clock_gen #(.PHASE(270)) u3(enable, clk4);
+  
+  initial begin
+    enable <= 0;
+    
+    for (int i = 0; i < 10; i= i+1) begin
+      dly = $random;
+      #(dly) enable <= ~enable;      
+      $display("i=%0d dly=%0d", i, dly);
+      #50;
+    end
+    
+    #50 $finish;
+  end
+  
+  initial begin
+    $dumpvars;
+    $dumpfile("dump.vcd");
+  end
+endmodule
